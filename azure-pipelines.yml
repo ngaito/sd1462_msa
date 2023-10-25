@@ -1,0 +1,51 @@
+trigger:
+- master
+
+resources:
+- repo: self
+variables:
+- group: demo-azure-var-group
+- name: vmImageName
+  value: 'ubuntu-latest'
+- name: imgRepoBackend
+  value: 'backend'
+- name: imgRepoFrontend
+  value: 'frontend'
+- name: dockerfile_backend
+  value: '$(Build.SourcesDirectory)/src/backend/Dockerfile'
+- name: dockerfile_frontend
+  value: '$(Build.SourcesDirectory)/src/frontend/Dockerfile'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imgRepoFrontend)
+        dockerfile: $(dockerfile_frontend)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+            $(Build.BuildId)
+            
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imgRepoBackend)
+        dockerfile: $(dockerfile_backend)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+            $(Build.BuildId)
+            
+    - task: PublishPipelineArtifact@1
+      inputs:
+        artifactName: 'manifests'
+        path: '$(Build.SourcesDirectory)'
