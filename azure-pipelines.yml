@@ -74,16 +74,12 @@ stages:
       inputs:
         script: |
           trivy image --exit-code 0 --severity HIGH,CRITICAL $(dockerRegistryServiceConnection)/$(imgRepoBackend):$(Build.BuildId) > trivy-image-scan-report-backend-high-critical.txt
-          ls -l
-          cp -rvf *.txt $(target)
     
     - task: CmdLine@2
       displayName: RUN AQUASEC TRIVY SCAN FRONTEND
       inputs:
         script: |
           trivy image --exit-code 0 --severity HIGH,CRITICAL $(dockerRegistryServiceConnection)/$(imgRepoFrontend):$(Build.BuildId) > trivy-image-scan-report-frontend-high-critical.txt
-          ls -l
-          cp -rvf *.txt $(target)
 ##########################
 # Publish the Artifacts:-
 ##########################     
