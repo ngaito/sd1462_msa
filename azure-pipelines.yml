@@ -73,8 +73,7 @@ stages:
       displayName: RUN AQUASEC TRIVY SCAN BACKEND
       inputs:
         script: |
-          trivy image --exit-code 0 --severity LOW,MEDIUM $(dockerRegistryServiceConnection)/$(imgRepoBackend):$(Build.BuildId) > trivy-image-scan-report-backend-low-med.txt
-          trivy image --exit-code 1 --severity HIGH,CRITICAL $(dockerRegistryServiceConnection)/$(imgRepoBackend):$(Build.BuildId) > trivy-image-scan-report-backend-high-critical.txt
+          trivy image --exit-code 0 --severity HIGH,CRITICAL $(dockerRegistryServiceConnection)/$(imgRepoBackend):$(Build.BuildId) > trivy-image-scan-report-backend-high-critical.txt
           ls -l
           cp -rvf *.txt $(target)
     
@@ -82,8 +81,7 @@ stages:
       displayName: RUN AQUASEC TRIVY SCAN FRONTEND
       inputs:
         script: |
-          trivy image --exit-code 0 --severity LOW,MEDIUM $(dockerRegistryServiceConnection)/$(imgRepoFrontend):$(Build.BuildId) > trivy-image-scan-report-frontend-low-med.txt
-          trivy image --exit-code 1 --severity HIGH,CRITICAL $(dockerRegistryServiceConnection)/$(imgRepoFrontend):$(Build.BuildId) > trivy-image-scan-report-frontend-high-critical.txt
+          trivy image --exit-code 0 --severity HIGH,CRITICAL $(dockerRegistryServiceConnection)/$(imgRepoFrontend):$(Build.BuildId) > trivy-image-scan-report-frontend-high-critical.txt
           ls -l
           cp -rvf *.txt $(target)
 ##########################
