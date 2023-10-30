@@ -71,19 +71,21 @@ stages:
 ##################################################################################
     - task: CmdLine@2
       displayName: RUN AQUASEC TRIVY SCAN BACKEND
-      continueOnError: true
       inputs:
         script: |
-          mkdir report
-          trivy image $(dockerRegistryServiceConnection)/$(imgRepoBackend):$(Build.BuildId) | tee ./report/trivy-image-scan-report-backend.txt
-
+          trivy image --exit-code 0 --severity LOW,MEDIUM $(dockerRegistryServiceConnection)/$(imgRepoBackend):$(Build.BuildId) > trivy-image-scan-report-backend-low-med.txt
+          trivy image --exit-code 1 --severity HIGH,CRITICAL $(dockerRegistryServiceConnection)/$(imgRepoBackend):$(Build.BuildId) > trivy-image-scan-report-backend-high-critical.txt
+          ls -l
+          cp -rvf *.txt $(target)
+    
     - task: CmdLine@2
       displayName: RUN AQUASEC TRIVY SCAN FRONTEND
-      continueOnError: true
       inputs:
         script: |
-          mkdir report
-          trivy image $(dockerRegistryServiceConnection)/$(imgRepoFrontend):$(Build.BuildId) | tee ./report/trivy-image-scan-report-frontend.txt
+          trivy image --exit-code 0 --severity LOW,MEDIUM $(dockerRegistryServiceConnection)/$(imgRepoFrontend):$(Build.BuildId) > trivy-image-scan-report-frontend-low-med.txt
+          trivy image --exit-code 1 --severity HIGH,CRITICAL $(dockerRegistryServiceConnection)/$(imgRepoFrontend):$(Build.BuildId) > trivy-image-scan-report-frontend-high-critical.txt
+          ls -l
+          cp -rvf *.txt $(target)
 ##########################
 # Publish the Artifacts:-
 ##########################     
