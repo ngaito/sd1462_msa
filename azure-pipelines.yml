@@ -70,20 +70,20 @@ stages:
 # Execute Trivy Scan
 ##################################################################################
     - task: CmdLine@2
-      displayName: RUN AQUASEC TRIVY SCAN
+      displayName: RUN AQUASEC TRIVY SCAN BACKEND
       continueOnError: true
       inputs:
         script: |
           mkdir report
-          trivy image -s HIGH,CRITICAL $(dockerRegistryServiceConnection)/$(imgRepoBackend):$(tag) | tee ./report/trivy-image-scan-report-backend.txt
+          trivy image -s HIGH,CRITICAL $(dockerRegistryServiceConnection)/$(imgRepoBackend):$(Build.BuildId) | tee ./report/trivy-image-scan-report-backend.txt
 
     - task: CmdLine@2
-      displayName: RUN AQUASEC TRIVY SCAN
+      displayName: RUN AQUASEC TRIVY SCAN FRONTEND
       continueOnError: true
       inputs:
         script: |
           mkdir report
-          trivy image -s HIGH,CRITICAL $(dockerRegistryServiceConnection)/$(imgRepoFrontend):$(tag) | tee ./report/trivy-image-scan-report-frontend.txt
+          trivy image -s HIGH,CRITICAL $(dockerRegistryServiceConnection)/$(imgRepoFrontend):$(Build.BuildId) | tee ./report/trivy-image-scan-report-frontend.txt
 ##########################
 # Publish the Artifacts:-
 ##########################     
