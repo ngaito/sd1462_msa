@@ -17,6 +17,10 @@ variables:
   value: '$(Build.SourcesDirectory)/src/frontend/Dockerfile'
 - name: imgRepoUrl
   value: 'ngaitodemoacr.azurecr.io'
+- name: tag
+  # value: $(Build.BuildId)
+  value: blue
+  #value: green
 
 stages:
 - stage: Build
@@ -38,7 +42,7 @@ stages:
         dockerfile: $(dockerfile_frontend)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
-            $(Build.BuildId)
+            $(tag)
             
 #####################################
 # Build and Push the Image backend to ACR:-
@@ -51,7 +55,7 @@ stages:
         dockerfile: $(dockerfile_backend)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
-            $(Build.BuildId)
+            $(tag)
             
 #######################################
 # Download and Install Aquasec Trivy:-
@@ -75,13 +79,13 @@ stages:
       displayName: RUN AQUASEC TRIVY SCAN BACKEND
       inputs:
         script: |
-          trivy image --exit-code 0 --severity HIGH,CRITICAL $(imgRepoUrl)/$(imgRepoBackend):$(Build.BuildId) > trivy-image-scan-report-backend-high-critical.txt
+          trivy image --exit-code 0 --severity HIGH,CRITICAL $(imgRepoUrl)/$(imgRepoBackend):$(tag) > trivy-image-scan-report-backend-high-critical.txt
     
     - task: CmdLine@2
       displayName: RUN AQUASEC TRIVY SCAN FRONTEND
       inputs:
         script: |
-          trivy image --exit-code 0 --severity HIGH,CRITICAL $(imgRepoUrl)/$(imgRepoFrontend):$(Build.BuildId) > trivy-image-scan-report-frontend-high-critical.txt
+          trivy image --exit-code 0 --severity HIGH,CRITICAL $(imgRepoUrl)/$(imgRepoFrontend):$(tag) > trivy-image-scan-report-frontend-high-critical.txt
 ##########################
 # Publish the Artifacts:-
 ##########################     
