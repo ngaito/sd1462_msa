@@ -18,9 +18,9 @@ variables:
 - name: imgRepoUrl
   value: 'ngaitodemoacr.azurecr.io'
 - name: tag
-  # value: $(Build.BuildId)
+  value: $(Build.BuildId)
   # value: blue
-  value: green
+  # value: green
 
 stages:
 - stage: Build
