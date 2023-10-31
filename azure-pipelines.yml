@@ -19,8 +19,8 @@ variables:
   value: 'ngaitodemoacr.azurecr.io'
 - name: tag
   # value: $(Build.BuildId)
-  value: blue
-  #value: green
+  # value: blue
+  value: green
 
 stages:
 - stage: Build
